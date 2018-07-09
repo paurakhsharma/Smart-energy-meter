@@ -8,18 +8,26 @@ app.use(express.static(path.join(__dirname, 'public')))
 app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'ejs')
 
+let data
+
 const bodyParser = require('body-parser')
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.get('/',(req, res) => {
-    res.render('index')
+    res.render('index', {
+        data
+    })
 })
 
 app.post('/post', (req, res) => {
     console.log(req.body.data)
-    res.send(`Thank you for ${req.body.data}`)
+    data = req.body.data
+    // res.send(`Thank you for ${req.body.data}`)
+    res.render('index', {
+        data
+    })
 })
 
 app.listen(PORT, () => console.log(`listening on port ${PORT}`))
