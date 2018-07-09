@@ -17,4 +17,9 @@ app.get('/',(req, res) => {
     res.render('index')
 })
 
+app.post('/post', (req, res) => {
+    console.log(req.body.data)
+    res.send(`Thank you for ${req.body.data}`)
+})
+
 app.listen(PORT, () => console.log(`listening on port ${PORT}`))
