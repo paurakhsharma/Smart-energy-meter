@@ -30,4 +30,8 @@ app.post('/post', (req, res) => {
     })
 })
 
+app.get('/data', (req,res) => {
+    res.send(200, `Your data is ${data}`)
+})
+
 app.listen(PORT, () => console.log(`listening on port ${PORT}`))
