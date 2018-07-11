@@ -31,7 +31,7 @@ app.post('/post', (req, res) => {
 })
 
 app.get('/data', (req,res) => {
-    res.send(JSON.stringify({data}))
+    res.sendfile('./newfile.txt')
 })
 
 app.listen(PORT, () => console.log(`listening on port ${PORT}`))
