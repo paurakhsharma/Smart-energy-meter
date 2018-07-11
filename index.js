@@ -31,7 +31,7 @@ app.post('/post', (req, res) => {
 })
 
 app.get('/data', (req,res) => {
-    res.json(data)
+    res.send(JSON.stringify({data}))
 })
 
 app.listen(PORT, () => console.log(`listening on port ${PORT}`))
