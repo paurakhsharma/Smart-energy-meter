@@ -8,7 +8,7 @@ app.use(express.static(path.join(__dirname, 'public')))
 app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'ejs')
 
-let data
+let data = 'No data'
 
 const bodyParser = require('body-parser')
 
