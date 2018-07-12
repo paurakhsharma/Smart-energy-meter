@@ -32,27 +32,7 @@ app.post('/post', (req, res) => {
 })
 
 app.get('/data', (req,res) => {
-    var query = url.parse(req.url, true).query;
-     
-if (typeof query.file === 'undefined') {
-    //specify Content will be an attachment
-    res.setHeader('Content-disposition', 'attachment; filename=theDocument.txt');
-    res.setHeader('Content-type', 'text/plain');
-    res.end("Hello, here is a file for you!");
-} else {
-    //read the image using fs and send the image content back in the response
-    fs.readFile('/' + query.file, function (err, content) {
-        if (err) {
-            res.writeHead(400, {'Content-type':'text/html'})
-            console.log(err);
-            res.end("No such file");    
-        } else {
-            //specify Content will be an attachment
-            res.setHeader('Content-disposition', 'attachment; filename='+query.file);
-            res.end(content);
-        }
-    });
-}
+    res.send(JSON.stringify({ data: data}))
 })
 
 app.listen(PORT, () => console.log(`listening on port ${PORT}`))
