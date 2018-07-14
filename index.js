@@ -26,7 +26,7 @@ app.post('/post', (req, res) => {
     console.log(req.body.data)
     data = req.body.data
     // res.send(`Thank you for ${req.body.data}`)
-    res.send(JSON.stringify('Data came successfully'))
+    res.send(JSON.stringify({data: req.body}))
 })
 
 // app.get('/data', (req,res) => {
