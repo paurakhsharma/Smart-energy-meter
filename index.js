@@ -29,12 +29,9 @@ app.post('/post', (req, res) => {
     res.send(JSON.stringify({data: req.body}))
 })
 
-// app.get('/data', (req,res) => {
-//     res.send(JSON.stringify({ data: data}))
-// })
-
 app.get('/data', (req,res) => {
-    res.send(JSON.stringify({ data: req.body.data}))
+    res.send(JSON.stringify({ data: data}))
 })
+
 
 app.listen(PORT, () => console.log(`listening on port ${PORT}`))
