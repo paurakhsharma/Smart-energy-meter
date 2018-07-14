@@ -26,13 +26,15 @@ app.post('/post', (req, res) => {
     console.log(req.body.data)
     data = req.body.data
     // res.send(`Thank you for ${req.body.data}`)
-    res.render('index', {
-        data
-    })
+    res.send(JSON.stringify('Data came successfully'))
 })
 
+// app.get('/data', (req,res) => {
+//     res.send(JSON.stringify({ data: data}))
+// })
+
 app.get('/data', (req,res) => {
-    res.send(JSON.stringify({ data: data}))
+    res.send(JSON.stringify({ data: req.body.data}))
 })
 
 app.listen(PORT, () => console.log(`listening on port ${PORT}`))
