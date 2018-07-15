@@ -29,16 +29,15 @@ app.post('/post', (req, res) => {
     res.send(JSON.stringify({data: req.body}))
 })
 
-app.get('/post', (req, res) => {
-    console.log(req.body.data)
-    data = req.body.data
+app.get('/post/:data', (req, res) => {
+    console.log(req.params.data)
+    data = req.params.data
     // res.send(`Thank you for ${req.body.data}`)
-    res.send(JSON.stringify({data: req.body}))
+    res.send(JSON.stringify({data: req.params.data}))
 })
 
 app.get('/data', (req,res) => {
     res.send(JSON.stringify({ data: data}))
 })
-
 
 app.listen(PORT, () => console.log(`listening on port ${PORT}`))
