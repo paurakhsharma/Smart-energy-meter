@@ -85,6 +85,8 @@ app.set('view engine', 'ejs')
 
 let data = 'No data'
 
+rootUrl = process.env.ROOT_URL || "http://localhost:5000";
+
 const bodyParser = require('body-parser')
 
 app.use(bodyParser.json());
@@ -97,7 +99,7 @@ let counter = 205;
 setInterval(function(){
     counter = (counter + Math.random() * (10 - 1) + 1)
     // Make a request for a user with a given ID
-    axios.get(`http://localhost:5000/post/${counter}`)
+    axios.get(`${rootUrl}/post/${counter}`)
     .catch(function (error) {
     // handle error
     // console.log(error);
