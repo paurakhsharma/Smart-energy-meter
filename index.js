@@ -123,13 +123,6 @@ app.get('/addcustomer', (req, res) => {
 
 })
 
-app.post('/post', (req, res) => {
-    console.log(req.body.data)
-    data = req.body.data
-    // res.send(`Thank you for ${req.body.data}`)
-    res.send(JSON.stringify({data: req.body}))
-})
-
 app.get('/post/:data', (req, res) => {
     (async () => {   
     console.log(req.params.data)
@@ -167,21 +160,36 @@ app.get('/post/:data', (req, res) => {
 })
 
 app.get('/data', (req,res) => {
-    res.send(JSON.stringify({
-        previousunit: Number.parseFloat(newPreviousunit).toFixed(2),
-        totalunit: Number.parseFloat(newTotalunit).toFixed(2),
-        currentunit: Number.parseFloat(newCurrentunit).toFixed(2)
-    }))
+    client.query("SELECT status from customers WHERE id=1", function(err, result){
+        if(err) {
+                console.error("Unable to enable user", err)
+                res.sendStatus(401)
+        } else {
+            if(result.rows[0].status) {
+                userStatus = 'yes'
+            }
+            else{
+                userStatus = 'no'
+            }
+            client.query("SELECT * from consumption WHERE id=( SELECT max(id) from consumption)", function(err, result){
+                if(err) {
+                        console.error("Unable to enable user", err)
+                        res.sendStatus(401)
+                } else {
+                    res.send(JSON.stringify({
+                        punit: Number.parseFloat(result.rows[0].previousunit).toFixed(2),
+                        cunit: Number.parseFloat(result.rows[0].currentunit).toFixed(2),
+                        cost: Number.parseFloat(result.rows[0].currentunit*7.5).toFixed(2),
+                        state: userStatus
+                    }))
+             }
+    })
+    }
+
+})
 })
 
 app.get('/dataforadmin', (req,res) => {
-    client.query("SELECT id from customers WHERE name='Braz'",function(err, result){
-        if(err){
-            client.end()
-            return console.error('error running query', err);
-        }
-        userid = result.rows[0].id
-        
         client.query("SELECT * from consumption ORDER BY id desc LIMIT 5", function(err, result){
             if(err){
                 client.end()
@@ -202,15 +210,14 @@ app.get('/dataforadmin', (req,res) => {
             }
             peakValue = Math.max.apply(Math, allCurrentUnit)
             console.log(peakValue, avarageCurrentUnit)
-            res.send(JSON.stringify({prevoius: result.rows[0].previousunit,
-                                    totalunit: result.rows[0].totalunit,
-                                    currentunit:result.rows[0].totalunit,
-                                    peak: peakValue,
-                                    cost: result.rows[0].totalunit * 7.5,
-                                    avarageCurrentUnit: avarageCurrentUnit}))    
+            res.send(JSON.stringify({prevoius: Number.parseFloat(result.rows[0].previousunit).toFixed(2),
+                                    totalunit: Number.parseFloat(result.rows[0].totalunit).toFixed(2),
+                                    currentunit: Number.parseFloat(result.rows[0].currentunit).toFixed(2),
+                                    peak: Number.parseFloat(peakValue).toFixed(2),
+                                    cost: Number.parseFloat(result.rows[0].totalunit * 7.5).toFixed(2),
+                                    avarageCurrentUnit: Number.parseFloat(avarageCurrentUnit).toFixed(2) }))    
         })
-    })
-})        
+    })       
 
 app.get('/admin', (req, res) =>{
     res.render('admin')

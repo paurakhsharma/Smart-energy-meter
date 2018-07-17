@@ -10,6 +10,7 @@
     <title>Welcome to smart energy meter</title>
 </head>
     <body>
+        <div id="app">
         <section id="page">
             <header>
                 <img id="header-logo" src="icon.png" alt="icon" >
@@ -18,8 +19,8 @@
                 <div id="container">
                    
                     
-                    <div id="app">
-                        <h1>Current meter reading: {{currentunit}}</h1>
+                    <div>
+                        <h1>Unit this month: {{currentunit}}</h1>
                         <!-- {{ previousunit }}
                         {{ totalunit }}
                         {{ currentunit }} -->
@@ -27,12 +28,24 @@
                 </div>
                 
             </div> 
-            <div id="right-one">Right area  
-                    Thi is some text
+            <div id="right-one">
+                    <div id="container">
+                   
+                    
+                            <div>
+                                <h1>Cost this month: {{cost}}</h1>
+                                <h1 v-if="status == 'no'">INACTIVE</h1>
+                                <h1 v-if="status == 'yes'">ACTIVE</h1>
+                                <!-- {{ previousunit }}
+                                {{ totalunit }}
+                                {{ currentunit }} -->
+                            </div>
+                        </div>
                 </div>   
             </main>
             <footer>Footer</footer>
-        </section> 
+        </section>
+    </div>   
     </body>
 <script src="vue.js"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
@@ -42,12 +55,14 @@
  var app = new Vue({
   el: '#app',
   data: {
-    previousunit: 'Previous unit',
-    totalunit: 'Total unit',
-    currentunit: 'Current unit'
+    previousunit: 0,
+    currentunit: 0,
+    cost: 0,
+    status: 'no'
   },
   created: function() {
     this.message = 'Your data displays here'
+    this.getData
     setInterval(this.getData, 2000)
   },
   methods: {
@@ -55,9 +70,10 @@
         axios.get('/data')
         .then(function (response) {
             // handle success
-            app.previousunit = response.data.previousunit
-            app.totalunit = response.data.totalunit
-            app.currentunit = response.data.currentunit
+            app.previousunit = response.data.punit
+            app.currentunit = response.data.cunit
+            app.cost = response.data.cost
+            app.status = response.data.state
         })
         .catch(function (error) {
             // handle error
