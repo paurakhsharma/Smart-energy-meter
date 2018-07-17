@@ -97,7 +97,7 @@ client.connect((err, client, done) => {
 
 let data = 'No data'
 
-rootUrl = process.env.ROOT_URL || "http://localhost:5000";
+rootUrl = "https://smartmeterwrc.herokuapp.com/";
 
 const bodyParser = require('body-parser')
 
@@ -117,7 +117,7 @@ setInterval(function(){
     // console.log(error);
     });
 
-},2000)
+},10000)
 
 app.get('/addcustomer', (req, res) => {
 
