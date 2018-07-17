@@ -38,12 +38,15 @@
 	
 table {
     border-collapse: collapse;
-    width: 100%;
+		width: 100%;
+		text-align: center;
+		text-align: justify;
+		font-weight:bold;
 }
 
 th, td {
     text-align: left;
-    padding: 8px;
+    padding: 12px;
 }
 
 tr:nth-child(even){background-color: #f2f2f2}
@@ -52,4 +55,8 @@ tr:nth-child(odd){background-color: #150909; color: #f2f2f2}
 th {
     background-color: #172457;
     color: white;
+}
+
+a {
+	text-decoration:none;
 }

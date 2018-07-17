@@ -97,7 +97,7 @@ client.connect((err, client, done) => {
 
 let data = 'No data'
 
-rootUrl = "https://smartmeterwrc.herokuapp.com";
+rootUrl = "http://https://smartmeterwrc.herokuapp.com";
 
 const bodyParser = require('body-parser')
 
@@ -151,11 +151,8 @@ app.get('/post/:data', (req, res) => {
             newPreviousunit = totalunit
             newTotalunit = data
             newCurrentunit = newTotalunit - newPreviousunit
-            date = new Date()
-            stringDate = date.toString()
-            updatedtime = stringDate.slice(0,24)
             client.query("INSERT INTO consumption(userid, previousunit, totalunit, currentunit, updatedtime) VALUES($1, $2, $3, $4, $5)", 
-            [userid, newPreviousunit, newTotalunit, newCurrentunit, newUpdatedtime]);
+            [userid, newPreviousunit, newTotalunit, newCurrentunit, new Date()]);
         })
       });} finally {
        
@@ -177,10 +174,46 @@ app.get('/data', (req,res) => {
     }))
 })
 
+app.get('/dataforadmin', (req,res) => {
+    client.query("SELECT id from customers WHERE name='Braz'",function(err, result){
+        if(err){
+            client.end()
+            return console.error('error running query', err);
+        }
+        userid = result.rows[0].id
+        
+        client.query("SELECT * from consumption ORDER BY id desc LIMIT 5", function(err, result){
+            if(err){
+                client.end()
+                return console.error('error running query', err);
+            }
+            allCurrentUnit = []
+            for(i=0; i<result.rows.length; i++) {
+                allCurrentUnit.push(parseFloat(result.rows[i].currentunit))
+
+            }
+            allCurrentUnit = allCurrentUnit.filter(function(e){return e});
+            var sum, avarageCurrentUnit = 0;
+            if (allCurrentUnit.length) {
+                sum = allCurrentUnit.reduce(function(a, b) { return a + b; });
+                avarageCurrentUnit = sum / allCurrentUnit.length;
+            } else {
+                avarageCurrentUnit = allCurrentUnit[0]
+            }
+            peakValue = Math.max.apply(Math, allCurrentUnit)
+            console.log(peakValue, avarageCurrentUnit)
+            res.send(JSON.stringify({prevoius: result.rows[0].previousunit,
+                                    totalunit: result.rows[0].totalunit,
+                                    currentunit:result.rows[0].totalunit,
+                                    peak: peakValue,
+                                    cost: result.rows[0].totalunit * 7.5,
+                                    avarageCurrentUnit: avarageCurrentUnit}))    
+        })
+    })
+})        
+
 app.get('/admin', (req, res) =>{
-    
     res.render('admin')
-    
 })
 
 app.get('/getusertable', (req, res) => {
@@ -215,5 +248,15 @@ app.get('/user/enable/:id', (req, res)=> {
             res.sendStatus(200)
         })
 })
+
+app.get('/:id',(req, res) => {
+    console.log(req.params.id)
+    if(req.params.id == 1){
+    res.render('user')
+    } else {
+        res.render('otheruser')
+    }
+})
+
 
 app.listen(PORT, () => console.log(`listening on port ${PORT}`))

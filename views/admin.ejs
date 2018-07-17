@@ -25,17 +25,18 @@
                  <th>Phase type</th>
                  <th>Registered Date</th>
                  <th>Status</th>
-                 
-                     <tr v-for="userdata in userdatas">
+
+                   <tr v-for="userdata in userdatas">
                         <td>{{ userdata.id }}</td>
-                        <td>{{ userdata.name }}</td>
+                        <td><a v-bind:href="userdata.id">{{ userdata.name }}</a></td>
                         <td>{{ userdata.address }}</td>
                         <td>{{ userdata.loadtype }} </td>
                         <td>{{ userdata.phasetype }}</td>
                         <td>{{ userdata.created }}</td>
                         <td v-if="userdata.status" ><span id="active">ACTIVE &nbsp; &nbsp;</span> <input v-on:click="disable(userdata.id)" type="checkbox" checked></td>
-                        <td v-else>  <span id="inactive">INACTIVE </span> <input v-on:click="enable(userdata.id)" type="checkbox"> </td>  
-                    </tr>   
+                        <td v-else>  <span id="inactive">INACTIVE </span> <input v-on:click="enable(userdata.id)" type="checkbox"> </td>
+                    </tr>
+                     
                 
               </table>
             </main>
