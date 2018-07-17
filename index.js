@@ -18,6 +18,18 @@ app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'ejs')
 
 
+const client = new Client({
+    connectionString: process.env.DATABASE_URL || 'postgresql://smartmeter:smartmeter@localhost:5432/smartmeter',
+    ssl: true,      
+});
+
+client.connect((err, client, done) => {
+    if(err) {
+        console.error(err);
+        return
+    }
+});
+
 // sequelize
 //   .authenticate()
 //   .then(() => {
@@ -119,17 +131,10 @@ app.post('/post', (req, res) => {
 })
 
 app.get('/post/:data', (req, res) => {
-    const client = new Client({
-    user: process.env.USER || 'smartmeter',
-    host: process.env.USER || 'localhost',
-    database: process.env.DATABASE || 'smartmeter',
-    password: process.env.PASSWORD || 'smartmeter',
-    port: process.env.PORT || 5432
-  });
+    (async () => {   
     console.log(req.params.data)
     data = req.params.data
-    client.connect();
-    client.query("SELECT id from customers WHERE name='Braz'",function(err, result){
+    try { await client.query("SELECT id from customers WHERE name='Braz'",function(err, result){
         if(err){
             client.end()
             return console.error('error running query', err);
@@ -150,13 +155,16 @@ app.get('/post/:data', (req, res) => {
             client.query("INSERT INTO consumption(userid, previousunit, totalunit, currentunit, updatedtime) VALUES($1, $2, $3, $4, $5)", 
             [userid, newPreviousunit, newTotalunit, newCurrentunit, newUpdatedtime]);
         })
-      });
+      });} finally {
+       
+      }
 
     res.send(JSON.stringify({
         previousunit: newPreviousunit,
         totalunit: newTotalunit,
         currentunit: newCurrentunit
     }))
+    })().catch(e => console.error(e.stack))
 })
 
 app.get('/data', (req,res) => {
