@@ -193,11 +193,27 @@ app.get('/getusertable', (req, res) => {
 })
 
 app.get('/user/disable/:id', (req, res)=> {
-    client.query("UPDATE customers SET status=false WHERE id=$1", [req.params.id])
+    client.query("UPDATE customers SET status=false WHERE id=$1", 
+        [req.params.id],
+        function(err, result) {
+            if(err) {
+                console.err("Unable to disable user", err)
+                res.sendStatus(500)
+            }
+            res.sendStatus(200)
+        })
 })
 
 app.get('/user/enable/:id', (req, res)=> {
-    client.query("UPDATE customers SET status=true WHERE id=$1", [req.params.id])
+    client.query("UPDATE customers SET status=true WHERE id=$1", 
+        [req.params.id],
+        function(err, result) {
+            if(err) {
+                console.err("Unable to enable user", err)
+                res.sendStatus(500)
+            }
+            res.sendStatus(200)
+        })
 })
 
 app.listen(PORT, () => console.log(`listening on port ${PORT}`))
