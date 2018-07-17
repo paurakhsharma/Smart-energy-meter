@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdn.jsdelivr.net/npm/vuesax/dist/vuesax.css" rel="stylesheet">
+    
+    <title>Welcome to smart energy meter</title>
+</head>
+    <body>
+        <section id="page">
+            <header>
+                <img id="header-logo" src="icon.png" alt="icon" >
+            </header>
+            <div id="left-one">
+                <div id="container">
+                   
+                    
+                    <div id="app">
+                        <h1>Current meter reading: {{currentunit}}</h1>
+                        <!-- {{ previousunit }}
+                        {{ totalunit }}
+                        {{ currentunit }} -->
+                    </div>
+                </div>
+                
+            </div> 
+            <div id="right-one">Right area  
+                    Thi is some text
+                </div>   
+            </main>
+            <footer>Footer</footer>
+        </section> 
+    </body>
+<script src="vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vuesax/dist/vuesax.umd.js"></script>
+    
+<script>
+ var app = new Vue({
+  el: '#app',
+  data: {
+    previousunit: 'Previous unit',
+    totalunit: 'Total unit',
+    currentunit: 'Current unit'
+  },
+  created: function() {
+    this.message = 'Your data displays here'
+    setInterval(this.getData, 2000)
+  },
+  methods: {
+    getData: function() {
+        axios.get('/data')
+        .then(function (response) {
+            // handle success
+            app.previousunit = response.data.previousunit
+            app.totalunit = response.data.totalunit
+            app.currentunit = response.data.currentunit
+        })
+        .catch(function (error) {
+            // handle error
+            console.log(error);
+        })
+        .then(function () {
+            // always executed
+        });
+    }
+  }
+})
+</script>
+</html>
