@@ -97,7 +97,7 @@ client.connect((err, client, done) => {
 
 let data = 'No data'
 
-rootUrl = "https://smartmeterwrc.herokuapp.com/";
+rootUrl = "https://smartmeterwrc.herokuapp.com";
 
 const bodyParser = require('body-parser')
 
