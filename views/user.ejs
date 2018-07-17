@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="user.css">
+    <link href="https://cdn.jsdelivr.net/npm/vuesax/dist/vuesax.css" rel="stylesheet">
+    
+    <title>Welcome to smart energy meter</title>
+</head>
+    <body>
+        <section id="page">
+            <header>
+                <img id="header-logo" src="icon.png" alt="icon" >
+            </header>
+            <div id="left-one">
+                <div id="container">
+                   
+                    
+                    <div id="app">
+                      
+                       <h1>Prevoius unit: {{ previous }} <i>kWh</i></h1>
+                       <h1>Total unit: {{ totalunit }} <i>kWh</i></h1> 
+                        <h1>Currentunit: {{ currentunit }} <i>kWh</i></h1>
+                        <h1>Peak Today: {{ peak }} <i>kWh</i></h1>
+                        <h1>Cost: Rs.{{ cost }}</h1>
+                        <h1>Average unit last hour: {{ avarageCurrentUnit }} <i>kWh</i></h1>
+                        
+                    </div>
+                </div>
+                
+            </div> 
+            <div id="right-one">Right area  
+                    Thi is some text
+                </div>   
+            </main>
+            <footer>Footer</footer>
+        </section> 
+    </body>
+<script src="vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vuesax/dist/vuesax.umd.js"></script>
+    
+<script>
+ var app = new Vue({
+  el: '#app',
+  data: {
+    previous: 0,
+    totalunit: 0,
+    currentunit: 0,
+    peak: 0,
+    cost: 0,
+    avarageCurrentUnit: 0
+  },
+  created: function() {
+    this.message = 'Your data displays here'
+    this.getData()
+    setInterval(this.getData, 15000)
+  },
+  methods: {
+    getData: function() {
+        axios.get('/dataforadmin')
+        .then(function (response) {
+            // handle success
+            app.previous = response.data.prevoius
+            app.totalunit = response.data.totalunit
+            app.currentunit = response.data.currentunit
+            app.peak = response.data.peak
+            app.cost = response.data.cost
+            app.avarageCurrentUnit = response.data.avarageCurrentUnit
+        })
+        .catch(function (error) {
+            // handle error
+            console.log(error);
+        })
+        .then(function () {
+            // always executed
+        });
+    }
+  }
+})
+</script>
+</html>

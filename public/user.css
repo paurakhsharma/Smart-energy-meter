@@ -1,0 +1,51 @@
+#page {
+	display: grid;
+	width: 100%;
+	height: 640px;
+	grid-template-areas: "head head"
+						 "left-one  right-one"
+						 "foot  foot";
+	grid-template-rows: 75px 1fr 45px;
+	grid-template-columns: 50% 50%;
+  }
+  
+  #page > header {
+	grid-area: head;
+	background-color: #5CDB95;
+  }
+  
+  #left-one {
+	grid-area: left-one;
+	text-align: center;
+	background-color: #379683;
+  }
+
+  #right-one {
+	grid-area: right-one;
+	text-align: center;
+	background-color: #379683;
+	color: #FBFCFF;
+  }
+
+  #page > footer {
+	grid-area: foot;
+	background-color: #5CDB95;
+  }
+
+  #header-logo {
+	  height: 50px;
+	  width: 150px;
+	  margin-top: 10px;
+	  margin-left: 5px;
+  }
+
+  #left-one #container {
+	color: #FBFCFF;
+	position: relative;
+	top: 50%;
+	transform: translateY(-50%);
+  }
+
+i {
+    font-size: 60%;
+}
