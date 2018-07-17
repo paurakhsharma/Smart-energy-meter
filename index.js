@@ -120,11 +120,11 @@ app.post('/post', (req, res) => {
 
 app.get('/post/:data', (req, res) => {
     const client = new Client({
-    user: 'smartmeter',
-    host: 'localhost',
-    database: 'smartmeter',
-    password: 'smartmeter',
-    port: 5432
+    user: process.env.USER || 'smartmeter',
+    host: process.env.USER || 'localhost',
+    database: process.env.DATABASE || 'smartmeter',
+    password: process.env.PASSWORD || 'smartmeter',
+    port: process.env.PORT || 5432
   });
     console.log(req.params.data)
     data = req.params.data
