@@ -107,17 +107,17 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.get('/',(req, res) => {
     res.render('layout')
 })
-let counter = 205;
-setInterval(function(){
-    counter = (counter + Math.random() * (10 - 1) + 1)
-    // Make a request for a user with a given ID
-    axios.get(`${rootUrl}/post/${counter}`)
-    .catch(function (error) {
-    // handle error
-    // console.log(error);
-    });
+// let counter = 205;
+// setInterval(function(){
+//     counter = (counter + Math.random() * (10 - 1) + 1)
+//     // Make a request for a user with a given ID
+//     axios.get(`${rootUrl}/post/${counter}`)
+//     .catch(function (error) {
+//     // handle error
+//     // console.log(error);
+//     });
 
-},10000)
+// },10000)
 
 app.get('/addcustomer', (req, res) => {
 
@@ -151,7 +151,9 @@ app.get('/post/:data', (req, res) => {
             newPreviousunit = totalunit
             newTotalunit = data
             newCurrentunit = newTotalunit - newPreviousunit
-            newUpdatedtime = Date.now() 
+            date = new Date()
+            stringDate = date.toString()
+            updatedtime = stringDate.slice(0,24)
             client.query("INSERT INTO consumption(userid, previousunit, totalunit, currentunit, updatedtime) VALUES($1, $2, $3, $4, $5)", 
             [userid, newPreviousunit, newTotalunit, newCurrentunit, newUpdatedtime]);
         })
@@ -173,6 +175,29 @@ app.get('/data', (req,res) => {
         totalunit: Number.parseFloat(newTotalunit).toFixed(2),
         currentunit: Number.parseFloat(newCurrentunit).toFixed(2)
     }))
+})
+
+app.get('/admin', (req, res) =>{
+    
+    res.render('admin')
+    
+})
+
+app.get('/getusertable', (req, res) => {
+    client.query("SELECT * from customers ORDER BY id",function(err, result){
+        if(err) {
+            return console.error('error getting data for admin', err);
+        }
+        res.send(JSON.stringify({userdata: result.rows}))
+    })
+})
+
+app.get('/user/disable/:id', (req, res)=> {
+    client.query("UPDATE customers SET status=false WHERE id=$1", [req.params.id])
+})
+
+app.get('/user/enable/:id', (req, res)=> {
+    client.query("UPDATE customers SET status=true WHERE id=$1", [req.params.id])
 })
 
 app.listen(PORT, () => console.log(`listening on port ${PORT}`))
