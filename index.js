@@ -182,7 +182,37 @@ app.get('/data', (req,res) => {
                     }))
              }
     })
-    }
+    }    
+
+})
+})
+
+app.get('/dataforlayout', (req,res) => {
+    client.query("SELECT status from customers WHERE id=1", function(err, result){
+        if(err) {
+                console.error("Unable to enable user", err)
+                res.sendStatus(401)
+        } else {
+            if(result.rows[0].status) {
+                userStatus = 'yes'
+            }
+            else{
+                userStatus = 'no'
+            }
+            client.query("SELECT * from consumption WHERE id=( SELECT max(id) from consumption)", function(err, result){
+                if(err) {
+                        console.error("Unable to enable user", err)
+                        res.sendStatus(401)
+                } else {
+                    res.send(JSON.stringify({
+                        previousunit: Number.parseFloat(result.rows[0].previous).toFixed(2),
+                        currentunit: Number.parseFloat(result.rows[0].currentunit).toFixed(2),
+                        cost: Number.parseFloat(result.rows[0].currentunit * 7.5).toFixed(2),
+                        state: userStatus
+                    }))
+             }
+    })
+    }    
 
 })
 })

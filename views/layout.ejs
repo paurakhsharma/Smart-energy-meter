@@ -63,15 +63,15 @@
   created: function() {
     this.message = 'Your data displays here'
     this.getData
-    setInterval(this.getData, 2000)
+    setInterval(this.getData, 10000)
   },
   methods: {
     getData: function() {
-        axios.get('/data')
+        axios.get('/dataforlayout')
         .then(function (response) {
             // handle success
-            app.previousunit = response.data.punit
-            app.currentunit = response.data.cunit
+            app.previousunit = response.data.previous
+            app.currentunit = response.data.currentunit
             app.cost = response.data.cost
             app.status = response.data.state
         })
