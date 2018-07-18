@@ -97,7 +97,7 @@ client.connect((err, client, done) => {
 
 let data = 'No data'
 
-rootUrl = "http://https://smartmeterwrc.herokuapp.com";
+rootUrl = "http://localhost:5000";
 
 const bodyParser = require('body-parser')
 
@@ -117,7 +117,7 @@ app.get('/',(req, res) => {
 //     // console.log(error);
 //     });
 
-// },10000)
+// },1000)
 
 app.get('/addcustomer', (req, res) => {
 
@@ -177,9 +177,7 @@ app.get('/data', (req,res) => {
                         res.sendStatus(401)
                 } else {
                     res.send(JSON.stringify({
-                        punit: Number.parseFloat(result.rows[0].previousunit).toFixed(2),
                         cunit: Number.parseFloat(result.rows[0].currentunit).toFixed(2),
-                        cost: Number.parseFloat(result.rows[0].currentunit*7.5).toFixed(2),
                         state: userStatus
                     }))
              }
