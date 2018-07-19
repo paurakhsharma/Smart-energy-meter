@@ -256,6 +256,7 @@ app.get('/getusertable', (req, res) => {
         if(err) {
             return console.error('error getting data for admin', err);
         }
+        console.log(result.rows)
         res.send(JSON.stringify({userdata: result.rows}))
     })
 })
