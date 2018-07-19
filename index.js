@@ -237,7 +237,7 @@ app.get('/dataforadmin', (req,res) => {
                 avarageCurrentUnit = allCurrentUnit[0]
             }
             peakValue = Math.max.apply(Math, allCurrentUnit)
-            console.log(peakValue, avarageCurrentUnit)
+            console.log(peakValue, avarageCurrentUnit, result.rows[0].totalunit)
             res.send(JSON.stringify({prevoius: Number.parseFloat(result.rows[0].previousunit).toFixed(2),
                                     totalunit: Number.parseFloat(result.rows[0].totalunit).toFixed(2),
                                     currentunit: Number.parseFloat(result.rows[0].currentunit).toFixed(2),
