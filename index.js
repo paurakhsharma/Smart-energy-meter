@@ -30,71 +30,6 @@ client.connect((err, client, done) => {
     }
 });
 
-// sequelize
-//   .authenticate()
-//   .then(() => {
-//     console.log('Connection has been established successfully.');
-//   })
-//   .catch(err => {
-//     console.error('Unable to connect to the database:', err);
-//   });
-
-// const Customers = sequelize.define('customers', {
-// name: {
-//     type: Sequelize.STRING
-//     },
-// address: {
-//     type: Sequelize.STRING
-//     },
-// loadtype: {
-//     type: Sequelize.INTEGER,
-//     },    
-// phasetype: {
-//     type: Sequelize.INTEGER,
-//     validate: {isIn: [[1,3]]}
-//     },
-// status: {
-//     type: Sequelize.BOOLEAN
-// }    
-// });
-
-// const Consumption = sequelize.define('consumption', {
-// userid: {
-//     type: Sequelize.INTEGER
-// },
-// previousunit: {
-//     type: Sequelize.STRING,
-//     defaultValue: 0,
-//     },
-// totalunit: {
-//     type: Sequelize.INTEGER
-//     },    
-// currentunit: {
-//     type: Sequelize.INTEGER
-//     }
-// }); 
-  
-// Customers.sync().then(() => {
-//     // Table created
-//     return Customers.create({
-//       name: 'Braz',
-//       address: 'Batulechour',
-//       loadtype: '5',
-//       phasetype: '1',
-//       status: 'yes'
-//     })
-//   })
-
-// Consumption.sync().then(() => {
-//     return Consumption.create({
-//         userid: 1,
-//         previousunit: 0,
-//         totalunit: 200,
-//         currentunit: 200
-//     })
-// })
-
-
 let data = 'No data'
 
 rootUrl = "http://localhost:5000";
@@ -116,13 +51,15 @@ app.get('/',(req, res) => {
 //     // handle error
 //     // console.log(error);
 //     });
-
 // },1000)
 
-app.get('/addcustomer', (req, res) => {
-
+app.get('/chart', (req, res) => {
+    client.query("SELECT currentunit, updatedtime from consumption ORDER BY id desc limit 10", (err, result) => {
+        res.send(JSON.stringify({
+            'chartdata' : result.rows
+        }))
+    })
 })
-
 app.get('/post/:data', (req, res) => {
     (async () => {   
     console.log(req.params.data)
@@ -237,7 +174,6 @@ app.get('/dataforadmin', (req,res) => {
                 avarageCurrentUnit = allCurrentUnit[0]
             }
             peakValue = Math.max.apply(Math, allCurrentUnit)
-            console.log(peakValue, avarageCurrentUnit, result.rows[0].totalunit)
             res.send(JSON.stringify({prevoius: Number.parseFloat(result.rows[0].previousunit).toFixed(2),
                                     totalunit: Number.parseFloat(result.rows[0].totalunit).toFixed(2),
                                     currentunit: Number.parseFloat(result.rows[0].currentunit).toFixed(2),
@@ -256,7 +192,6 @@ app.get('/getusertable', (req, res) => {
         if(err) {
             return console.error('error getting data for admin', err);
         }
-        console.log(result.rows)
         res.send(JSON.stringify({userdata: result.rows}))
     })
 })
@@ -286,7 +221,6 @@ app.get('/user/enable/:id', (req, res)=> {
 })
 
 app.get('/:id',(req, res) => {
-    console.log(req.params.id)
     if(req.params.id == 1){
     res.render('user')
     } else {

@@ -33,12 +33,14 @@
                 
             </div> 
             <div id="right-one">
+                    <canvas id="myChart" width="400" height="400"></canvas>
                 </div>   
             </main>
-            <footer>Footer</footer>
+            <footer></footer>
         </section> 
     </body>
 <script src="vue.js"></script>
+<script src="Chart.js"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/vuesax/dist/vuesax.umd.js"></script>
     
@@ -80,5 +82,56 @@
     }
   }
 })
+
+let Chartcurrentunit = [], Chartupdatedtime = []; 
+
+let plotChart = function() { axios.get('/chart')
+    .then(function (response) {
+        // console.log(response.data.chartdata[response.data.chartdata.length -1].updatedtime.slice(11,16))
+        Chartcurrentunit = []
+        Chartupdatedtime = []
+        for(i=0; i<(response.data.chartdata.length); i++) {
+            Chartcurrentunit.push(response.data.chartdata[i].currentunit)
+            Chartupdatedtime.push(response.data.chartdata[i].updatedtime.slice(11,16))
+        }
+    })
+    .catch(function (error) {
+        // handle error
+        console.log(error);
+    })
+    .then(function () {
+            // always executed
+        Chartupdatedtime.reverse()
+        Chartcurrentunit.reverse()
+        var ctx = document.getElementById('myChart').getContext('2d');
+        ctx.canvas.width = 300;
+        ctx.canvas.height = 229;
+        var chart = new Chart(ctx, {
+        // The type of chart we want to create
+        type: 'line',
+
+        // The data for our dataset
+        data: {
+            labels: Chartupdatedtime,
+            datasets: [{
+                label: "Unit vs Time",
+                backgroundColor: 'rgb(255, 99, 132)',
+                borderColor: 'rgb(255, 99, 132)',
+                data: Chartcurrentunit,
+                pointBackgroundColor: 'black',
+                pointRadius: 4,
+                pointHoverRadius: 6
+            }]
+        },
+
+            // Configuration options go here
+            options: {
+                animation: false
+            }
+        });
+    } )
+    }
+
+plotChart()
 </script>
 </html>
