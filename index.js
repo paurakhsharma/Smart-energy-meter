@@ -80,7 +80,7 @@ app.get('/post/:data', (req, res) => {
             console.log(previousunit, totalunit, currentunit, updatedtime)
             newPreviousunit = totalunit
             newTotalunit = data
-            newCurrentunit = newTotalunit - newPreviousunit
+            newCurrentunit = Math.abs(newTotalunit - newPreviousunit)
             client.query("INSERT INTO consumption(userid, previousunit, totalunit, currentunit, updatedtime) VALUES($1, $2, $3, $4, $5)", 
             [userid, newPreviousunit, newTotalunit, newCurrentunit, new Date()]);
         })
